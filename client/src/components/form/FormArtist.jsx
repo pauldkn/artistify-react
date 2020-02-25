@@ -4,11 +4,7 @@ import { withRouter } from "react-router-dom";
 import LabPreview from "../LabPreview";
 // styles
 import api from "../../api/APIHandler";
-import axios from "axios";
 import "./../../styles/form.css";
-import APIHandler from "../../api/APIHandler";
-
-// name - description - style - isBand
 
 class FormArtist extends Component {
   state = {
@@ -26,10 +22,25 @@ class FormArtist extends Component {
         this.setState({ styles: apiRes.data.styles });
       })
       .catch(dbErr => console.log("OUPS! ERROR: ", dbErr));
+
+    if(this.props._id) {
+      api
+        .get(`/artists/${this.props._id}`)
+        .then(apiRes => {
+          console.log(apiRes);
+          console.log(apiRes.data);
+          this.setState({
+            name: apiRes.data.name,
+            description: apiRes.data.description,
+            style: apiRes.data.style,
+            isBand: apiRes.data.isBand
+          });
+        })
+        .catch(apiErr => console.log(apiErr));
+    }
   };
 
   updateState = e => {
-    // e.preventDefault();
     this.setState({ [e.target.name]: e.target.value });
   };
 
@@ -75,14 +86,26 @@ class FormArtist extends Component {
           onSubmit={this.handleSubmit}
         >
           <label htmlFor="name">Name</label>
-          <input type="text" name="name" className="input" />
+          <input
+            type="text"
+            name="name"
+            className="input"
+            defaultValue={this.state.name}
+          />
 
           <label htmlFor="description">Description</label>
-          <textarea type="text" name="description" className="input" />
+          <textarea
+            type="text"
+            name="description"
+            className="input"
+            defaultValue={this.state.description}
+          />
 
           <label htmlFor="style">Style</label>
           <select name="style" id="style" className="input">
             <option value="">Select style</option>
+            {/* Below: IN CASE OF EDIT FORM */}
+            {/* <option selected>{this.state.style}</option> */}
             {this.state.styles.map((s, i) => (
               <option key={i} value={s._id}>
                 {s.name}
@@ -95,7 +118,7 @@ class FormArtist extends Component {
             <label htmlFor="isBand">Yes</label>
             <input type="radio" name="isBand" id="yes" value="true" />
             <label htmlFor="isBand">No</label>
-            <input type="radio" name="isBand" id="yes" value="false" />
+            <input type="radio" name="isBand" id="no" value="false" />
           </div>
 
           <button className="btn" type="submit">
