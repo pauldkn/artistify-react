@@ -55,11 +55,22 @@ router.get("/filtered-artists", (req, res, next) => {
 });
 
 router.post("/artists", (req, res) => {
-  res.status(200).json({ msg: "@todo" })
+  const newArtist = req.body;
+
+  artistModel
+  .create(newArtist)
+  .then(() => res.status(200).json("yes c'est bon pelo"))
+  .catch(dbErr => console.error(dbErr))
 });
 
 router.patch("/artists/:id", async (req, res, next) => {
-  res.status(200).json({ msg: "@todo" })
+  const artist = req.params.id;
+  const artistUpdated = req.body;
+
+  artistModel
+  .findByIdAndUpdate(artist, artistUpdated)
+  .then(dbRes => res.status(200).json("okok modifié"))
+  .catch(dbErr => console.log("ERROR! ", dbErr))
 });
 
 router.delete("/artists/:id", (req, res, next) => {
