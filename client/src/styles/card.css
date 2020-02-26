@@ -18,6 +18,8 @@
   align-items: center;
   padding: 1rem;
   position: relative;
+  font-family: overpass-mono, Courier, monospace;
+  font-weight: bold;
 }
 
 .card .title {

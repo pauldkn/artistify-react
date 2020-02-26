@@ -67,17 +67,22 @@ router.post("/artists", (req, res) => {
 });
 
 router.patch("/artists/:id", async (req, res, next) => {
-  const artist = req.params.id;
+  const artistId = req.params.id;
   const artistUpdated = req.body;
 
   artistModel
-  .findByIdAndUpdate(artist, artistUpdated)
+  .findByIdAndUpdate(artistId, artistUpdated)
   .then(dbRes => res.status(200).json("OK: it's modified pelo"))
   .catch(dbErr => console.log("ERROR! ", dbErr))
 });
 
 router.delete("/artists/:id", (req, res, next) => {
-  res.status(200).json({ msg: "@todo" })
+  const artistId = req.params.id
+
+  artistModel
+  .findByIdAndDelete(artistId)
+  .then(dbRes => res.status(200).json("OK: it's deleted pelo"))
+  .catch(dbErr => res.status(500).json("OUPS: Error while deleting this artist!"))
 });
 
 module.exports = router;
